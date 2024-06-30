@@ -37,12 +37,12 @@ func InitRouter() *gin.Engine {
 			for range ticker.C {
 				fmt.Println("data change check")
 				if l.Len() > 0 && l.Len() > preLen { //数据变化说明有新的推送,才进行推送
-					fmt.Println("data change")
+					fmt.Println("has data change")
 					nowLen := l.Len()
 					//nowList := l
 					//array := listToSlice(nowList)
 					for i := preLen; i < nowLen; i++ {
-						fmt.Println("data change123123")
+						fmt.Println("data change")
 						conn.WriteMessage(websocket.TextMessage, []byte("新的时间提醒"))
 					}
 					preLen = nowLen
