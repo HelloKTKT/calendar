@@ -39,11 +39,11 @@ func InitRouter() *gin.Engine {
 				if l.Len() > 0 && l.Len() > preLen { //数据变化说明有新的推送,才进行推送
 					fmt.Println("has data change")
 					nowLen := l.Len()
-					//nowList := l
-					//array := listToSlice(nowList)
+					nowList := l
+					array := toObjectArray(nowList)
 					for i := preLen; i < nowLen; i++ {
 						fmt.Println("data change")
-						conn.WriteMessage(websocket.TextMessage, []byte("新的时间提醒"))
+						conn.WriteMessage(websocket.TextMessage, []byte("新的提醒内容："+array[i].Content+",提醒时间："+array[i].Time.Format(time.RFC3339)))
 					}
 					preLen = nowLen
 				}
@@ -54,10 +54,11 @@ func InitRouter() *gin.Engine {
 	return router
 }
 
-func listToSlice(l *list.List) []interface{} {
-	slice := make([]interface{}, 0, l.Len())
+// 将list转换为对象数组的函数
+func toObjectArray(l *list.List) []CalendarReminder {
+	objects := make([]CalendarReminder, 0)
 	for e := l.Front(); e != nil; e = e.Next() {
-		slice = append(slice, e.Value)
+		objects = append(objects, e.Value.(CalendarReminder))
 	}
-	return slice
+	return objects
 }
