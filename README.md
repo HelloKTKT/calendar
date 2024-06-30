@@ -9,7 +9,7 @@
 ok      time-manager    0.538s
 <br>
 到达日期提醒时间发短信或者邮件进行提醒（只进行简单封装，需要密钥才能实现）
-websocket
+websocket（已实现）
 
 
 ### 创建数据库
