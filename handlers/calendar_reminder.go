@@ -26,6 +26,9 @@ func AddCalendarReminder(context *gin.Context) {
 	}
 
 	userId := getUserIdfromJWT(context)
+	if userId == 0 {
+		return
+	}
 
 	layout := "2006-01-02 15:04:05" // Go的time包规定的日期格式字符串
 	t, err := time.Parse(layout, param.ReminderTime)
@@ -39,7 +42,7 @@ func AddCalendarReminder(context *gin.Context) {
 	}
 
 	p := models.CalendarReminder{Content: param.ReminderContent, Time: t, UserId: userId}
-	id, err := p.Add()
+	_, err = p.Add()
 	if err != nil {
 		log.Println(err)
 		context.JSON(http.StatusOK, gin.H{
@@ -48,7 +51,7 @@ func AddCalendarReminder(context *gin.Context) {
 		})
 		return
 	}
-	msg := fmt.Sprintf("insert success %d", id)
+	msg := fmt.Sprintf("insert success")
 	context.JSON(http.StatusOK, gin.H{
 		"status": 0,
 		"msg":    msg,
@@ -79,6 +82,9 @@ func DeleteCalendarReminder(context *gin.Context) {
 	}
 
 	userId := getUserIdfromJWT(context)
+	if userId == 0 {
+		return
+	}
 	if userId != c.UserId {
 		context.JSON(http.StatusOK, gin.H{
 			"status": -1,
@@ -151,6 +157,9 @@ func UpdateCalendarReminder(context *gin.Context) {
 	}
 
 	userId := getUserIdfromJWT(context)
+	if userId == 0 {
+		return
+	}
 	if userId != c.UserId {
 		context.JSON(http.StatusOK, gin.H{
 			"status": -1,
@@ -185,6 +194,9 @@ func UpdateCalendarReminder(context *gin.Context) {
 func ListCalendarReminder(context *gin.Context) {
 
 	userId := getUserIdfromJWT(context)
+	if userId == 0 {
+		return
+	}
 	c := models.CalendarReminder{UserId: userId}
 
 	rs, err := c.List()
